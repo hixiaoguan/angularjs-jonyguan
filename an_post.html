@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Angular Forms</title>
+	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.0.2/css/bootstrap.min.css">
+	<script src="http://cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+	<script src="http://cdn.bootcss.com/angular.js/1.2.0/angular.min.js"></script>
+	<script src="js/an_post.js"></script>
+</head>
+<body ng-app="formApp" ng-controller="formController">
+<div class="container">
+<div class="col-md-6 col-md-offset-3">
+	<div class="page-header">
+		<h1>Angularjs psot 数据实例 </h1>
+	</div>
+	<div id="messages" class="well" ng-show="message">{{ message }}</div>
+
+	<form ng-submit="postForm()">
+		<div id="title-group" class="form-group" ng-class="{ 'has-error' : errorTitle }">
+			<label>标题</label>
+			<input type="text" name="title" class="form-control" placeholder="输入标题" ng-model="formData.title">
+            <span class="help-block" ng-show="errorTitle">{{ errorTitle }}</span>
+		</div>
+
+		<div id="content-group" class="form-group" ng-class="{ 'has-error' : errorContent }">
+			<label>内容</label>
+			<textarea name="content" class="form-control" cols="30" rows="5" placeholder="输入内容" ng-model="formData.content"></textarea>
+			<span class="help-block" ng-show="errorContent">{{ errorContent }}</span>
+		</div>
+		<input type="text" name="action" value="" ng-model="formData.action">
+		<button type="submit" class="btn btn-success btn-lg btn-block">
+			<span class="glyphicon glyphicon-flash"></span> 提交
+		</button>
+	</form>
+	<br/>
+	<div class="well">
+		{{ formData }}
+	</div>
+
+</div>
+</div>
+</body>
+</html>

@@ -20,7 +20,7 @@
             $('#2').on('click', function(){
                 $.post(
                     "get.php", 
-                    {action:"add_article",title:"标题",content:"内容",typename:"安卓"}, 
+                    {action:"add_article",title:"标题",content:"内容",typeid:"2"}, 
                     function(data){
                         console.log(data);
                     }
@@ -83,7 +83,7 @@
                     <a href="#delete_article" class="list-group-item">删除文章</a>
                     <a href="#get_article" class="list-group-item">获得一篇文章</a>
                     <a href="#update_article" class="list-group-item">更新文章</a>
-                    <a href="#user_login" class="list-group-item">用户登录</a>
+                    <a href="#code_intro" class="list-group-item">返回码说明</a>
                 </div>
             </div>
             <div class="col-md-9">
@@ -317,7 +317,7 @@
     "id":"6",
     "title":"标题",
     "content":"内容",
-    "typename":"安卓"
+    "typeid":"2"
 }</pre>
                                 <h4>参数说明</h4>
                                 <table class="table table-bordered table-hover">
@@ -348,9 +348,9 @@
                                             <td>内容</td>
                                         </tr>
                                         <tr>
-                                            <td>typename</td>
+                                            <td>typeid</td>
                                             <td>是</td>
-                                            <td>所属分类</td>
+                                            <td>所属分类id</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -361,8 +361,32 @@
                             </div>
                         </div>
                     </div>
-                    <div id="user_login" class="tab-pane">
-                        
+                    <div id="code_intro" class="tab-pane">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">返回码说明</div>
+                            <div class="panel-body">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <th class="col-md-2">code</th>
+                                        <th  class="col-md-10">说明</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>101</td>
+                                            <td>操作成功</td>
+                                        </tr>
+                                        <tr>
+                                            <td>102</td>
+                                            <td>操作失败</td>
+                                        </tr>
+                                        <tr>
+                                            <td>103</td>
+                                            <td>分类不存在</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

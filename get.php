@@ -33,16 +33,16 @@ if ($action == 'get_list') {
  * @return 
  */
 if ($action == 'add_article') {
-    if (empty($title) || empty($content) || empty($typename)) {
+    if (empty($title) || empty($content) || empty($typeid)) {
         echo json_encode(array('code' => 102));
         return;
     }
-    $typeid = $db->fetch('arctype', 'id', array('typename' => trim($typename)));
-    if (!$typeid) {
-        echo json_encode(array('errormsg' => '分类不存在'));
+    $id = $db->rowcount('arctype', array('id' => "$typeid"));
+    if (!$id) {
+        echo json_encode(array('code' => 103));
         return;
     }
-    $result = $db->insert('article', array('title' => "$title", 'content' => "$content", 'typeid' =>"{$typeid['id']}", 'addtime' => time()));
+    $result = $db->insert('article', array('title' => "$title", 'content' => "$content", 'typeid' =>"$typeid", 'addtime' => time()));
     if ($result) {
         echo json_encode(array('article_id' => $db->lastinsertid()));
         return;

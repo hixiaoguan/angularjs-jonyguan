@@ -94,15 +94,14 @@ showCont.controller('ShowContCtrl', function($scope, $http, $stateParams) {
 var addCont = angular.module("addCont", []);
 addCont.controller('AddContCtrl', function($scope, $http) {
      
-
     $scope.formData = {};
-    $scope.formData.action = 'add_article'; 
+    $scope.formData.action = 'add_article';
     $scope.postForm = function() {
         $http({
             method  : 'POST',
             url     : 'get.php',
             data    : $.param($scope.formData),
-            headers : { 'Content-Type': 'application/x-www-form-urlencoded' } 
+            headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
         })
         .success(function(data) {
             console.log(data);
@@ -115,13 +114,106 @@ addCont.controller('AddContCtrl', function($scope, $http) {
             }
         });
     };
-
     
 });
 
+/**
+ * 这里是修改内容模块
+ */
+var modifyCont = angular.module("modifyCont", []);
 
+modifyCont.directive("contenteditable", function () {
+        return {
+            require:"ngModel",
+            link:function (scope, ele, attrs, ctrl) {
+                //view -> model
+                ele.bind("blur keyup",function() {
+                    scope.$apply(function() {
+                        console.log("setViewValue");
+                        ctrl.$setViewValue(ele.text());
+                    });
+                });
 
+                //model -> view
+                ctrl.$render = function(value) {
+                    console.log("render");
+                    ele.html(value);
+                };
+                //读取初始值
+                ctrl.$setViewValue(ele.text());
+            }
+        };
+    });
 
+modifyCont.controller('ModifyContCtrl', function($scope, $http, $stateParams) {
+     //读取这一条
+    console.log($stateParams.bookId);
+
+    $http({
+    method: 'GET',
+    url: 'get.php?action=get_article&id='+$stateParams.bookId
+    }).success(function(data, status, headers, config) {
+    console.log("success...");
+    console.log(data);
+    $scope.lists=data;
+    }).error(function(data, status, headers, config) {
+    console.log("error...");
+    });
+
+    //update
+    $scope.formData = {};
+    $scope.formData.action = 'update_article';
+    $scope.formData.id = $stateParams.bookId;
+    $scope.postForm = function() {
+        console.log(form.title);
+        $http({
+            method  : 'POST',
+            url     : 'get.php',
+            data    : $.param($scope.formData),
+            headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
+        })
+        .success(function(data) {
+            console.log(data);
+            if (data.code==102) {
+                //修改失败
+                window.location.href='status.html?val=0';
+            } else {
+                //修改成功
+                window.location.href='status.html?val=1';
+            }
+        });
+    };
+    
+});
+
+/**
+ * 这里是删除内容模块
+ */
+
+var delCont = angular.module("delCont", []);
+delCont.controller('DelContCtrl', function($scope, $http, $stateParams) {
+     
+    $scope.formData = {};
+    $gets="?action=delete_article&id="+$stateParams.bookId;
+    console.log($gets);
+    $scope.delForm = function() {
+        $http({
+            method  : 'GET',
+            url     : 'get.php'+$gets,
+        })
+        .success(function(data) {
+            console.log(data);
+            if (data.code==101) {
+                //删除成功
+                window.location.href='status.html?val=1';
+            } else {
+                //删除失败
+                window.location.href='status.html?val=0';
+            }
+        });
+    };
+
+});
 
 
 

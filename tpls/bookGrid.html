@@ -14,8 +14,8 @@
                             {{list.title}}
                         </span>
                         <a ui-sref="bookdetail({bookId:{{list.id}}})" class="btn">详情</a>
-                        <a ui-sref="get.php?action=delete_article&id=11" class="btn">修改</a>
-                        <a ui-sref="get.php?action=delete_article&id=11" class="btn">删除</a>
+                        <a ui-sref="modify({bookId:{{list.id}}})" class="btn">修改</a>
+                        <a ui-sref="del({bookId:{{list.id}}})" class="btn">删除</a>
 
                     </div>
                 </div>

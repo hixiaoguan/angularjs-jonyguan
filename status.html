@@ -36,16 +36,16 @@
             val = Request['val']; 
 
             function a(){
-                location.href="/an-http/#/0";
+                location.href="http://abc.com/#/0";
             }
 
 
             //alert(val); 
             if(val==0){
-                $("#status").text("添加失败，3秒钟后返回");
+                $("#status").text("操作失败，3秒钟后返回");
                 setTimeout('a()',1000);
             }else{
-                $("#status").text("添加成功，3秒钟后返回");
+                $("#status").text("操作成功，3秒钟后返回");
                 setTimeout('a()',3000);
             }
 

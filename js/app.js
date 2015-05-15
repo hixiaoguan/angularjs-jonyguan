@@ -1,4 +1,4 @@
-var routerApp = angular.module('routerApp', ['ui.router','pageList','showCont','addCont']);
+var routerApp = angular.module('routerApp', ['ui.router','pageList','showCont','addCont','modifyCont','delCont']);
 /**
  * 由于整个应用都会和路由打交道，所以这里把$state和$stateParams这两个对象放到$rootScope上，方便其它地方引用和注入。
  * 这里的run方法只会在angular启动的时候运行一次。
@@ -55,5 +55,13 @@ routerApp.config(function($stateProvider, $urlRouterProvider) {
         .state('bookdetail', {
             url: '/bookdetail/:bookId', //注意这里在路由中传参数的方式
             templateUrl: 'tpls/bookDetail.html'
+        })
+        .state('modify', {
+            url: '/modify/:bookId', //注意这里在路由中传参数的方式
+            templateUrl: 'tpls/modifyForm.html'
+        })
+        .state('del', {
+            url: '/del/:bookId', //注意这里在路由中传参数的方式
+            templateUrl: 'tpls/delForm.html'
         })
 });

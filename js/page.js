@@ -32,7 +32,6 @@ angular.module('xg.page', []).directive('xgPage',[function(){
                     return;
                 }else{
                     scope.conf.currentPage = item;
-                    alert(scope.conf.currentPage);
                 }
             };
 

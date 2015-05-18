@@ -31,9 +31,9 @@
                         </label>
                         <div class="col-md-10">
                             <select class="form-control" ng-model="formData.typeid">
-                                <option value='1'>前端</option>
-                                <option value='2'>安卓</option>
-                                <option value='3'>IOS</option>
+
+                            <option ng-repeat="list in lists" value="list({type:{{list.id}}})">{{list.typename}}</option>
+
                             </select>
                         </div>
                     </div>

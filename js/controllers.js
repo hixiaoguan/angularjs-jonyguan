@@ -51,22 +51,42 @@ pageList.controller("ListTypeCtrl",["$scope","$http",function($scope,$http){
 /**
  * 这里是内容列表模块
  */
+totals=0;
 pageList.controller("arcListCtrl",["$scope","$http","$location",function($scope,$http,$location){
+ 
+    //获取当前路径
+    $scope.typeid=$location.path().replace("/","");
+    //获取总条数
 
-
+    if($scope.typeid==0){
+        $get_total_url='get.php?action=get_total';
+    }else{
+        $get_total_url='get.php?action=get_total&where=typeid='+$scope.typeid;
+    }
+    $http({
+        method: 'GET',
+        url: $get_total_url
+    }).success(function(data, status, headers, config) {
+        console.log("success...");
+        console.log(data);
+        console.log(data.total);
+        $scope.paginationConf.totalItems=data.total;
+    }).error(function(data, status, headers, config) {
+        console.log("error...");
+    });
+    
     //分页
     $scope.paginationConf = {
 
         currentPage: 1,
-        totalItems: 20,
+        //totalItems: 15,
         itemsPerPage: 5,
         pagesLength: 5,
         perPageOptions: [10, 20, 30, 40, 50],
         rememberPerPage: 'perPageItems',
         onChange: function(){
-
             //获取当前路径
-            $scope.typeid=$location.path().replace("/","");
+            //$scope.typeid=$location.path().replace("/","");
             //获取分页开始数
             if($scope.paginationConf.currentPage==1){
                 $scope.limit=0;
@@ -74,7 +94,7 @@ pageList.controller("arcListCtrl",["$scope","$http","$location",function($scope,
                 $scope.limit=$scope.paginationConf.currentPage*$scope.paginationConf.itemsPerPage-$scope.paginationConf.itemsPerPage;
             }
             
-            alert($scope.limit);
+            //alert($scope.limit);
             
             if($scope.typeid==0){
                 $geturl='get.php?action=get_list&offset='+$scope.limit+'&rows='+$scope.paginationConf.itemsPerPage+'&orderField=id&orderBy=DESC';
@@ -82,7 +102,7 @@ pageList.controller("arcListCtrl",["$scope","$http","$location",function($scope,
                 $geturl='get.php?action=get_list&offset='+$scope.limit+'&rows='+$scope.paginationConf.itemsPerPage+'&where=typeid='+$scope.typeid+'&orderField=id&orderBy=DESC';
             }
             //console.log($typeid);
-            console.log($geturl);
+            //console.log($geturl);
             $http({
                 method: 'GET',
                 url: $geturl
@@ -93,13 +113,11 @@ pageList.controller("arcListCtrl",["$scope","$http","$location",function($scope,
             }).error(function(data, status, headers, config) {
                 console.log("error...");
             });
+
         }
+
     };
     
-
-
-
-
 }]);
 
 

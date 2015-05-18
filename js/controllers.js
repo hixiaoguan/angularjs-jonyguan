@@ -57,7 +57,6 @@ pageList.controller("arcListCtrl",["$scope","$http","$location",function($scope,
     //获取当前路径
     $scope.typeid=$location.path().replace("/","");
     //获取总条数
-
     if($scope.typeid==0){
         $get_total_url='get.php?action=get_total';
     }else{
@@ -70,14 +69,12 @@ pageList.controller("arcListCtrl",["$scope","$http","$location",function($scope,
         console.log("success...");
         console.log(data);
         console.log(data.total);
-        $scope.paginationConf.totalItems=data.total;
+        $scope.paginationConf.totalItems=data.total;//这里获取并设置总页数
     }).error(function(data, status, headers, config) {
         console.log("error...");
     });
-    
     //分页
     $scope.paginationConf = {
-
         currentPage: 1,
         //totalItems: 15,
         itemsPerPage: 5,
@@ -85,8 +82,6 @@ pageList.controller("arcListCtrl",["$scope","$http","$location",function($scope,
         perPageOptions: [10, 20, 30, 40, 50],
         rememberPerPage: 'perPageItems',
         onChange: function(){
-            //获取当前路径
-            //$scope.typeid=$location.path().replace("/","");
             //获取分页开始数
             if($scope.paginationConf.currentPage==1){
                 $scope.limit=0;
@@ -94,15 +89,12 @@ pageList.controller("arcListCtrl",["$scope","$http","$location",function($scope,
                 $scope.limit=$scope.paginationConf.currentPage*$scope.paginationConf.itemsPerPage-$scope.paginationConf.itemsPerPage;
             }
             
-            //alert($scope.limit);
-            
             if($scope.typeid==0){
                 $geturl='get.php?action=get_list&offset='+$scope.limit+'&rows='+$scope.paginationConf.itemsPerPage+'&orderField=id&orderBy=DESC';
             }else{
                 $geturl='get.php?action=get_list&offset='+$scope.limit+'&rows='+$scope.paginationConf.itemsPerPage+'&where=typeid='+$scope.typeid+'&orderField=id&orderBy=DESC';
             }
-            //console.log($typeid);
-            //console.log($geturl);
+
             $http({
                 method: 'GET',
                 url: $geturl
@@ -113,22 +105,16 @@ pageList.controller("arcListCtrl",["$scope","$http","$location",function($scope,
             }).error(function(data, status, headers, config) {
                 console.log("error...");
             });
-
         }
-
     };
-    
 }]);
-
 
 /**
  * 这里是内容详情模块
  */
 var showCont = angular.module("showCont", []);
 showCont.controller('ShowContCtrl', function($scope, $http, $stateParams) {
-     
     console.log($stateParams.Id);
-
     $http({
         method: 'GET',
         url: 'get.php?action=get_article&id='+$stateParams.Id
@@ -139,7 +125,6 @@ showCont.controller('ShowContCtrl', function($scope, $http, $stateParams) {
     }).error(function(data, status, headers, config) {
         console.log("error...");
     });
-    
 });
 
 /**
@@ -147,7 +132,20 @@ showCont.controller('ShowContCtrl', function($scope, $http, $stateParams) {
  */
 var addCont = angular.module("addCont", []);
 addCont.controller('AddContCtrl', function($scope, $http) {
-     
+
+    //获取分类列表
+    $http({
+        method: 'GET',
+        url: 'get.php?action=get_arctype&where=reid=0'
+    }).success(function(data, status, headers, config) {
+        console.log("get type list success...");
+        console.log(data);
+        $scope.lists=data;
+    }).error(function(data, status, headers, config) {
+        console.log("get type list error...");
+    });
+
+    //执行写入数据
     $scope.formData = {};
     $scope.formData.action = 'add_article';
     $scope.postForm = function() {
@@ -161,21 +159,29 @@ addCont.controller('AddContCtrl', function($scope, $http) {
             console.log(data);
             if (!data.code) {
                 //添加成功
-                window.location.href='status.html?val=1';
+                console.log('插入成功');
+                if(confirm("插入成功"))
+                {
+                    //如果是true ，返回列表
+                    location.href="./#/0";
+                }
             } else {
                 //添加失败
-                window.location.href='status.html?val=0';
+                console.log('插入失败');
+                if(confirm("插入失败"))
+                {
+                    location.href="./#/add";
+                }
             }
         });
     };
-    
+
 });
 
 /**
  * 这里是修改内容模块
  */
 var modifyCont = angular.module("modifyCont", []);
-
 modifyCont.directive("contenteditable", function () {
         return {
             require:"ngModel",
@@ -187,7 +193,6 @@ modifyCont.directive("contenteditable", function () {
                         ctrl.$setViewValue(ele.text());
                     });
                 });
-
                 //model -> view
                 ctrl.$render = function(value) {
                     console.log("render");
@@ -202,7 +207,6 @@ modifyCont.directive("contenteditable", function () {
 modifyCont.controller('ModifyContCtrl', function($scope, $http, $stateParams) {
      //读取这一条
     console.log($stateParams.Id);
-
     $http({
     method: 'GET',
     url: 'get.php?action=get_article&id='+$stateParams.Id
@@ -213,7 +217,6 @@ modifyCont.controller('ModifyContCtrl', function($scope, $http, $stateParams) {
     }).error(function(data, status, headers, config) {
     console.log("error...");
     });
-
     //update
     $scope.formData = {};
     $scope.formData.action = 'update_article';
@@ -237,16 +240,13 @@ modifyCont.controller('ModifyContCtrl', function($scope, $http, $stateParams) {
             }
         });
     };
-    
 });
 
 /**
  * 这里是删除内容模块
  */
-
 var delCont = angular.module("delCont", []);
 delCont.controller('DelContCtrl', function($scope, $http, $stateParams) {
-     
     $scope.formData = {};
     $gets="?action=delete_article&id="+$stateParams.Id;
     console.log($gets);

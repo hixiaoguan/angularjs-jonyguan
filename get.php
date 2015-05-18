@@ -36,7 +36,7 @@ if ($action == 'add_article') {
         echo json_encode(array('code' => 102));
         return;
     }
-    $id = $db->rowcount('arctype', array('id' => "$typeid"));
+    $id = $db->rowcount('arctype', array('id' => "$typeid[id]"));//官
     if (!$id) {
         echo json_encode(array('code' => 103));
         return;

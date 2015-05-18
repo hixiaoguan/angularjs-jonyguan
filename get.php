@@ -2,7 +2,6 @@
 error_reporting(E_ALL ^ E_NOTICE);
 include 'db.class.php';
 $db = new db();
-//$db->mysql('qdm11447523.my3w.com', 'qdm11447523', 'apple123', 'qdm11447523_db', 'leo_', 'utf8');
 $db->mysql('localhost', 'root', '123456', 'angularjs', 'leo_', 'utf8');
 // print_r($_GET);exit;
 extract($_GET, EXTR_SKIP);

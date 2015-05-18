@@ -1,0 +1,59 @@
+<!doctype html>
+<html ng-app="routerApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Angular Demo</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <script src="http://cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+</head>
+
+<body>
+
+    <h2 id="status" style="text-align:center">
+        
+    </h2>
+    
+    <div class="pre">
+        <script type="text/javascript">
+            function GetRequest() { 
+            var url = location.search; //获取url中"?"符后的字串 
+            var theRequest = new Object(); 
+            if (url.indexOf("?") != -1) { 
+            var str = url.substr(1); 
+            strs = str.split("&"); 
+            for(var i = 0; i < strs.length; i ++) { 
+            theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]); 
+            } 
+            } 
+            return theRequest; 
+            } 
+            //http://abc.com/an-http/status.html?val=0
+            //alert(window.location.href);
+            var Request = new Object(); 
+            Request = GetRequest(); 
+            var val; 
+            val = Request['val']; 
+
+            function a(){
+                location.href="http://www.guanshibin.cn/wap/angular/an-http/#/0";
+            }
+
+
+            //alert(val); 
+            if(val==0){
+                $("#status").text("添加失败，3秒钟后返回");
+                setTimeout('a()',1000);
+            }else{
+                $("#status").text("添加成功，3秒钟后返回");
+                setTimeout('a()',3000);
+            }
+
+
+
+        </script>
+    </div>
+
+</body>
+
+</html>

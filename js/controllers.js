@@ -73,11 +73,11 @@ pageList.controller("arcListCtrl",["$scope","$http",function($scope,$http){
 var showCont = angular.module("showCont", []);
 showCont.controller('ShowContCtrl', function($scope, $http, $stateParams) {
      
-    console.log($stateParams.bookId);
+    console.log($stateParams.Id);
 
     $http({
         method: 'GET',
-        url: 'get.php?action=get_article&id='+$stateParams.bookId
+        url: 'get.php?action=get_article&id='+$stateParams.Id
     }).success(function(data, status, headers, config) {
         console.log("success...");
         console.log(data);
@@ -147,11 +147,11 @@ modifyCont.directive("contenteditable", function () {
 
 modifyCont.controller('ModifyContCtrl', function($scope, $http, $stateParams) {
      //读取这一条
-    console.log($stateParams.bookId);
+    console.log($stateParams.Id);
 
     $http({
     method: 'GET',
-    url: 'get.php?action=get_article&id='+$stateParams.bookId
+    url: 'get.php?action=get_article&id='+$stateParams.Id
     }).success(function(data, status, headers, config) {
     console.log("success...");
     console.log(data);
@@ -163,7 +163,7 @@ modifyCont.controller('ModifyContCtrl', function($scope, $http, $stateParams) {
     //update
     $scope.formData = {};
     $scope.formData.action = 'update_article';
-    $scope.formData.id = $stateParams.bookId;
+    $scope.formData.id = $stateParams.Id;
     $scope.postForm = function() {
         console.log(form.title);
         $http({
@@ -194,7 +194,7 @@ var delCont = angular.module("delCont", []);
 delCont.controller('DelContCtrl', function($scope, $http, $stateParams) {
      
     $scope.formData = {};
-    $gets="?action=delete_article&id="+$stateParams.bookId;
+    $gets="?action=delete_article&id="+$stateParams.Id;
     console.log($gets);
     $scope.delForm = function() {
         $http({

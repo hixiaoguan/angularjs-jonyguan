@@ -1,4 +1,4 @@
-var routerApp = angular.module('routerApp', ['ui.router','pageList','showCont','addCont','modifyCont','delCont']);
+var routerApp = angular.module('routerApp', ['ui.router','pageList','showCont','addCont','modifyCont','delCont','xg.page']);
 /**
  * 由于整个应用都会和路由打交道，所以这里把$state和$stateParams这两个对象放到$rootScope上，方便其它地方引用和注入。
  * 这里的run方法只会在angular启动的时候运行一次。
@@ -30,38 +30,38 @@ routerApp.config(function($stateProvider, $urlRouterProvider) {
                     templateUrl: 'tpls/home.html'
                 },
                 'main@index': {
-                    templateUrl: 'tpls/loginForm.html'
+                    templateUrl: 'tpls/login.html'
                 }
             }
         })
-        .state('booklist', {
-            url: '/{bookType:[0-9]{1,4}}',
+        .state('list', {
+            url: '/{type:[0-9]{1,4}}',
             views: { //注意这里的写法，当一个页面上带有多个ui-view的时候如何进行命名和视图模板的加载动作
                 '': {
-                    templateUrl: 'tpls/bookList.html'
+                    templateUrl: 'tpls/list.html'
                 },
-                'booktype@booklist': {
-                    templateUrl: 'tpls/bookType.html'
+                'type@list': {
+                    templateUrl: 'tpls/type.html'
                 },
-                'bookgrid@booklist': {
-                    templateUrl: 'tpls/bookGrid.html'
+                'grid@list': {
+                    templateUrl: 'tpls/grid.html'
                 }
             }
         })
-        .state('addbook', {
-            url: '/addbook',
-            templateUrl: 'tpls/addBookForm.html'
+        .state('add', {
+            url: '/add',
+            templateUrl: 'tpls/add.html'
         })
-        .state('bookdetail', {
-            url: '/bookdetail/:bookId', //注意这里在路由中传参数的方式
-            templateUrl: 'tpls/bookDetail.html'
+        .state('show', {
+            url: '/show/:Id', //注意这里在路由中传参数的方式
+            templateUrl: 'tpls/show.html'
         })
         .state('modify', {
-            url: '/modify/:bookId', //注意这里在路由中传参数的方式
-            templateUrl: 'tpls/modifyForm.html'
+            url: '/modify/:Id', //注意这里在路由中传参数的方式
+            templateUrl: 'tpls/modify.html'
         })
         .state('del', {
-            url: '/del/:bookId', //注意这里在路由中传参数的方式
-            templateUrl: 'tpls/delForm.html'
+            url: '/del/:Id', //注意这里在路由中传参数的方式
+            templateUrl: 'tpls/del.html'
         })
 });

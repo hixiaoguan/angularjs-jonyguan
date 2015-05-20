@@ -1,5 +1,6 @@
 <?php
 error_reporting(E_ALL ^ E_NOTICE);
+header("Access-Control-Allow-Orgin:*");
 include 'db.class.php';
 $db = new db();
 $db->mysql('localhost', 'root', '123456', 'angularjs', 'leo_', 'utf8');
@@ -13,14 +14,16 @@ extract($_POST, EXTR_SKIP);
 if ($action == 'get_list') {
     $limit = $order = '';
     if (is_numeric($offset) && is_numeric($rows)) {
-        $limit = "$offset,$rows";
+        $limit = " LIMIT $offset,$rows";
     }
     $orderBy = empty($orderBy) ? 'DESC' : $orderBy;
     if (is_string($orderField)) {
-        $order = "$orderField $orderBy";
+        $order = " ORDER BY $orderField $orderBy";
     }
-    $where = empty($where) ? '' : $where;
-    $list = $db->fetchall('article', '*', "$where", "$order", "$limit");
+    $where = empty($where) ? '' : $db->format_condition($where);
+    $sql = "SELECT a.*,b.typename,b.reid FROM `leo_article` AS a INNER JOIN `leo_arctype` AS b ON a.typeid = b.id $where $order $limit";
+    $list = $db->query($sql)->fetchall();
+    // $list = $db->fetchall('article', '*', "$where", "$order", "$limit");
     echo json_encode($list);
     return;
 }
@@ -32,8 +35,17 @@ if ($action == 'get_list') {
  * @return 
  */
 if ($action == 'add_article') {
-    if (empty($title) || empty($content) || empty($typeid)) {
-        echo json_encode(array('code' => 102));
+    if (empty($title)) {
+        $reArr['errors']['title'] = '标题必须';
+    }
+    if (empty($content)) {
+        $reArr['errors']['content'] = '内容必须';
+    }
+    if (empty($typeid['id'])) {
+        $reArr['errors']['typeid'] = '分类必须';
+    }
+    if (empty($title) || empty($content) || empty($typeid['id'])) {
+        echo json_encode($reArr);
         return;
     }
     $id = $db->rowcount('arctype', array('id' => "$typeid[id]"));//官
@@ -41,7 +53,7 @@ if ($action == 'add_article') {
         echo json_encode(array('code' => 103));
         return;
     }
-    $result = $db->insert('article', array('title' => "$title", 'content' => "$content", 'typeid' =>"$typeid", 'addtime' => time()));
+    $result = $db->insert('article', array('title' => "$title", 'content' => "$content", 'typeid' =>"$typeid[id]", 'addtime' => time()));
     if ($result) {
         echo json_encode(array('article_id' => $db->lastinsertid()));
         return;
@@ -53,7 +65,9 @@ if ($action == 'add_article') {
  * 获得一篇文章
  */
 if ($action == 'get_article') {
-    $data = $db->fetch('article', '*', array('id' => $id));
+    $sql = "SELECT a.*,b.typename,b.reid FROM `leo_article` AS a INNER JOIN `leo_arctype` AS b ON a.typeid = b.id WHERE a.id = $id";
+    $data = $db->query($sql)->fetch();
+    // $data = $db->fetch('article', '*', array('id' => $id));
     if ($data) {
         echo json_encode($data);
         return;
@@ -65,7 +79,7 @@ if ($action == 'get_article') {
  * 更新
  */
 if ($action == 'update_article') {
-    $result = $db->update('article', array('title' => "$title", 'content' => "$content", 'typeid' => "$typeid"), array('id' => $id));
+    $result = $db->update('article', array('title' => "$title", 'content' => "$content", 'typeid' => "$typeid[id]"), array('id' => $id));
     $code = $result ? 101 : 102;
     echo json_encode(array('code' => $code));
     return;

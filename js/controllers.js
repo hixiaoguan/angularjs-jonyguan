@@ -107,6 +107,37 @@ pageList.controller("arcListCtrl",["$scope","$http","$location",function($scope,
             });
         }
     };
+    //删除
+    $scope.del = function(index,Id) {
+      $scope.lists.splice(index, 1);
+      //获取Id执行删除
+       var gets="?action=delete_article&id="+Id;
+        console.log(gets);
+
+        $http({
+            method  : 'GET',
+            url     : 'get.php'+gets,
+        })
+        .success(function(data) {
+            console.log(data);
+            if (data.code==101) {
+                //删除成功
+                console.log('删除成功');
+                $scope.meg_success="删除成功！";
+                $("#successbox").animate({opacity:'1'}).addClass("slideDown");
+                setTimeout(function(){$("#successbox").removeClass().animate({opacity:'0'});}, 800);
+            } else {
+                //删除失败
+                console.log('删除失败');
+                $scope.meg_success="";
+                $scope.meg_error="删除失败! ";
+                 $("#errorbox").animate({opacity:'1'}).addClass("slideDown");
+                 setTimeout(function(){$("#errorbox").removeClass().animate({opacity:'0'});}, 800);
+            }
+        });
+
+ };
+
 }]);
 
 /**
@@ -160,18 +191,15 @@ addCont.controller('AddContCtrl', function($scope, $http) {
             if (!data.code) {
                 //添加成功
                 console.log('插入成功');
-                if(confirm("插入成功"))
-                {
-                    //如果是true ，返回列表
-                    location.href="./#/0";
-                }
+                $scope.meg_success="插入成功! 正在返回列表页...";
+                $scope.meg_error="";
+                setTimeout(function(){location.href='/#/0'}, 1000);
             } else {
                 //添加失败
                 console.log('插入失败');
-                if(confirm("插入失败"))
-                {
-                    location.href="./#/add";
-                }
+                $scope.meg_success="";
+                $scope.meg_error="插入失败! 正在返回列表页...";
+                setTimeout(function(){location.href='/#/0'}, 1000);
             }
         });
     };
@@ -182,30 +210,20 @@ addCont.controller('AddContCtrl', function($scope, $http) {
  * 这里是修改内容模块
  */
 var modifyCont = angular.module("modifyCont", []);
-modifyCont.directive("contenteditable", function () {
-        return {
-            require:"ngModel",
-            link:function (scope, ele, attrs, ctrl) {
-                //view -> model
-                ele.bind("blur keyup",function() {
-                    scope.$apply(function() {
-                        console.log("setViewValue");
-                        ctrl.$setViewValue(ele.text());
-                    });
-                });
-                //model -> view
-                ctrl.$render = function(value) {
-                    console.log("render");
-                    ele.html(value);
-                };
-                //读取初始值
-                ctrl.$setViewValue(ele.text());
-            }
-        };
-    });
 
 modifyCont.controller('ModifyContCtrl', function($scope, $http, $stateParams) {
-     //读取这一条
+    //获取分类列表
+    $http({
+        method: 'GET',
+        url: 'get.php?action=get_arctype&where=reid=0'
+    }).success(function(data, status, headers, config) {
+        console.log("get type list success...");
+        console.log(data);
+        $scope.types=data;
+    }).error(function(data, status, headers, config) {
+        console.log("get type list error...");
+    });
+    //读取这一条
     console.log($stateParams.Id);
     $http({
     method: 'GET',
@@ -219,10 +237,12 @@ modifyCont.controller('ModifyContCtrl', function($scope, $http, $stateParams) {
     });
     //update
     $scope.formData = {};
-    $scope.formData.action = 'update_article';
-    $scope.formData.id = $stateParams.Id;
     $scope.postForm = function() {
-        console.log(form.title);
+        $scope.formData.action = 'update_article';
+        $scope.formData.id = $stateParams.Id;
+        $scope.formData.title = form.title.value;
+        $scope.formData.content = form.content.value;
+        $scope.formData.typeid = $("#typeid option:selected").val();//待优化取值方式
         $http({
             method  : 'POST',
             url     : 'get.php',
@@ -230,43 +250,24 @@ modifyCont.controller('ModifyContCtrl', function($scope, $http, $stateParams) {
             headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
         })
         .success(function(data) {
+            console.log(33333);
             console.log(data);
-            if (data.code==102) {
-                //修改失败
-                window.location.href='status.html?val=0';
-            } else {
-                //修改成功
-                window.location.href='status.html?val=1';
-            }
-        });
-    };
-});
-
-/**
- * 这里是删除内容模块
- */
-var delCont = angular.module("delCont", []);
-delCont.controller('DelContCtrl', function($scope, $http, $stateParams) {
-    $scope.formData = {};
-    $gets="?action=delete_article&id="+$stateParams.Id;
-    console.log($gets);
-    $scope.delForm = function() {
-        $http({
-            method  : 'GET',
-            url     : 'get.php'+$gets,
-        })
-        .success(function(data) {
-            console.log(data);
+            console.log(44444);
             if (data.code==101) {
-                //删除成功
-                window.location.href='status.html?val=1';
+                //添加成功
+                console.log('修改成功');
+                $scope.meg_success="修改成功! 正在返回列表页...";
+                $scope.meg_error="";
+                setTimeout(function(){location.href='/#/0'}, 1000);
             } else {
-                //删除失败
-                window.location.href='status.html?val=0';
+                //添加失败
+                console.log('修改失败');
+                $scope.meg_success="";
+                $scope.meg_error="修改失败! 正在返回列表页...";
+                setTimeout(function(){location.href='/#/0'}, 1000);
             }
         });
     };
-
 });
 
 
